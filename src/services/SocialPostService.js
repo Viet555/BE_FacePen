@@ -1,0 +1,116 @@
+const { default: mongoose } = require("mongoose");
+const connection = require("../config/configDB");
+
+const createPostService = async (dataCreate) => {
+    console.log(dataCreate)
+    try {
+        const { author, caption, media, visibility } = dataCreate;
+        if (!author || !media) {
+            return ({
+                Ec: -1,
+                Mes: "missing input "
+            })
+        }
+        let checkAuthor = await connection.User.findById(author)
+        if (checkAuthor) {
+            const data = await connection.Post.create({
+                author,
+                media,
+                caption: caption || '',
+                visibility: visibility || 'public',
+            })
+            return ({
+                Ec: 0,
+                Mes: 'Create post success'
+            })
+        } else {
+            return ({
+                Ec: -1,
+                Mes: 'author is not esxits'
+            })
+        }
+
+
+    } catch (e) {
+        console.log(e)
+        return {
+            Ec: -2,
+            Mes: 'Internal server error',
+        };
+    }
+}
+//update
+const updateSocialPostService = async (dataUpdate) => {
+    try {
+        // if (!dataUpdate) {
+        //     return ({
+        //         Ec: -1,
+        //         Mes: 'Missing '
+        //     })
+        // }
+        const { _id, author, caption, media, visibility, } = dataUpdate;
+        if (!_id) {
+            return ({
+                Ec: -1,
+                Mes: 'Missing Id'
+            })
+        }
+        const existingPost = await connection.Post.findById(_id);
+        if (!existingPost) {
+            return {
+                Ec: -1,
+                Mes: 'Post not found'
+            };
+        }
+        let dataUp = await connection.Post.findByIdAndUpdate(
+            _id,
+            {
+                author,
+                caption: caption || existingPost.caption,
+                media: media || existingPost.media,
+                visibility: visibility || existingPost.visibility,
+            }, { new: true }
+        )
+        return {
+            Ec: 0,
+            Mes: 'Update post success',
+            Data: dataUp
+        };
+
+    } catch (e) {
+        console.log(e)
+        return {
+            Ec: -2,
+            Mes: 'Internal server error',
+        };
+    }
+}
+//dele
+const deletePostService = async (idPost) => {
+    try {
+        if (!idPost || !mongoose.Types.ObjectId.isValid(idPost)) {
+            return {
+                Ec: -1,
+                Mes: 'Invalid or missing post ID'
+            };
+        }
+        let post = await connection.Post.deleteOne({ _id: idPost })
+        if (!post) {
+            return ({
+                Ec: 2,
+                Mes: 'post not found'
+            })
+        }
+        return ({
+            Ec: 0,
+            Mes: 'Delete post success'
+        })
+    } catch (e) {
+        console.log(e)
+        return {
+            Ec: -2,
+            Mes: 'Internal server error',
+        };
+    }
+}
+module.exports = { createPostService, updateSocialPostService, deletePostService }

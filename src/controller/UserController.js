@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { CreateUSerService, handleLogin, handleUpdateUser, handleDeleteUser } = require('../services/UserService');
+const { CreateUSerService, handleLogin, handleUpdateUser, handleDeleteUser, getTableUserService } = require('../services/UserService');
 const CreateUSer = async (req, res) => {
     try {
         let response = await CreateUSerService(req.body)
@@ -40,7 +40,6 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
     try {
         id = req.query.id
-        console.log(id)
         let response = await handleDeleteUser(id)
         return res.status(200).json(response)
     } catch (e) {
@@ -51,4 +50,20 @@ const deleteUser = async (req, res) => {
         })
     }
 }
-module.exports = { CreateUSer, loginUser, updateUser, deleteUser }
+const getUserTable = async (req, res) => {
+    try {
+        limit = req.query.limit
+        page = req.query.page
+        if (!limit) limit = 6
+        let response = await getTableUserService(limit, page)
+        return res.status(200).json(response)
+    } catch (e) {
+        console.log(e)
+        return res.status(400).json({
+            Ec: -1,
+            Mes: 'err from server'
+        })
+    }
+}
+
+module.exports = { CreateUSer, loginUser, updateUser, deleteUser, getUserTable }

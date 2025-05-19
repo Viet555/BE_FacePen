@@ -220,4 +220,35 @@ const handleDeleteUser = async (UserId) => {
         };
     }
 }
-module.exports = { CreateUSerService, handleLogin, handleUpdateUser, handleDeleteUser }
+//get Table
+const getTableUserService = async (limit, page) => {
+    try {
+        if (!limit || !page) {
+            return {
+                Ec: -1,
+                Mes: 'Missing limit or page',
+            };
+        } else {
+            let totalUsers = await connection.User.countDocuments()
+            let totalPages = Math.ceil(totalUsers / limit)
+            let dataUsers = await connection.User.find().sort({ createdAt: -1 }).limit(limit).select('-password').skip((page - 1) * limit)
+            return (
+                {
+                    Ec: 0,
+                    Mes: 'get tabel user Success',
+                    data: dataUsers,
+                    totalPages: totalPages,
+                    currentPage: page
+                }
+            )
+        }
+
+    } catch (e) {
+        console.log(e)
+        return {
+            Ec: -2,
+            Mes: 'Internal server error',
+        };
+    }
+}
+module.exports = { CreateUSerService, handleLogin, handleUpdateUser, handleDeleteUser, getTableUserService }
