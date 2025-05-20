@@ -8,6 +8,9 @@ const userSchema = new mongoose.Schema({
     roleId: { type: String, },
     avatar: { type: String, },
     phoneNumber: { type: String, },
+    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    status: { type: String, enum: ['active', 'inactive'], default: 'active' },
     resetPasswordToken: { type: String, default: null },
     resetPasswordExpires: { type: Date, default: null }
 });
