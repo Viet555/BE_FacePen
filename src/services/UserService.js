@@ -101,7 +101,7 @@ const handleLogin = async (DataLogin) => {
                         role: user.roleId
                     })
                     let key = process.env.JWT_SECRET
-
+                    user.status = 'active'
                     let token = jwt.sign(payload, key, { expiresIn: process.env.JWT_EXPIRE })
                     // let refreshToken = jwt.sign(payload, key, { expiresIn: '7d' });
                     return ({
@@ -115,6 +115,12 @@ const handleLogin = async (DataLogin) => {
 
                     })
 
+                }
+                else {
+                    return ({
+                        Ec: 3,
+                        Mes: `password wrong`
+                    })
                 }
             }
         } else {

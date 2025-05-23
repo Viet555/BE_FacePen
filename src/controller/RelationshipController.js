@@ -41,7 +41,6 @@ const RejectFriendRequest = async (req, res) => {
 }
 const GetListFriend = async (req, res) => {
     try {
-
         const id = req.query.id
         const response = await getListFriend(id);
         return res.status(200).json(response);

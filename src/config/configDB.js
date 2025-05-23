@@ -3,6 +3,10 @@ const mongoose = require('mongoose');
 const User = require('../model/User');
 const Post = require('../model/SocialPost');
 const RelationShip = require('../model/RelationShip');
+const Story = require('../model/Story');
+
+const StoryCollection = require('../model/StoryCollection');
+const StoryArchive = require('../model/StoryArchive');
 
 connection = mongoose.connect('mongodb://localhost:27017/FacePen', {
 
@@ -11,4 +15,4 @@ connection = mongoose.connect('mongodb://localhost:27017/FacePen', {
     .catch(err => console.error('Error connecting to MongoDB:', err));
 
 
-module.exports = { connection, User, Post, RelationShip };
+module.exports = { connection, User, Post, RelationShip, Story, StoryArchive, StoryCollection };

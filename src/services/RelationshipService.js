@@ -44,7 +44,12 @@ const AcceptFriendRequestService = async (requesterId, recipientId) => {
         if (!data) {
             return { Ec: 1, Mes: "No pending request found" }
         }
-
+        // await connection.User.findByIdAndUpdate(requesterId, {
+        //     $addToSet: { friends: recipientId }
+        // });
+        // await connection.User.findByIdAndUpdate(recipientId, {
+        //     $addToSet: { friends: requesterId }
+        // });
         return { Ec: 0, Mes: "Friend request accepted" }
 
     } catch (e) {
@@ -71,7 +76,6 @@ const rejectFriendRequestService = async (requesterId, recipientId) => {
         if (!data) {
             return { Ec: 1, Mes: "No pending request found" }
         }
-
         return { Ec: 0, Mes: "Friend request rejected" }
 
     } catch (e) {
@@ -94,7 +98,7 @@ const getListFriend = async (userId) => {
                     { requester: userId, status: 'accepted' },
                     { recipient: userId, status: 'accepted' }
                 ]
-            }).populate('requester recipient', 'username avatar')
+            }).populate('requester recipient', 'firstName lastName avatar')
             const friends = accepted.map(rel =>
                 rel.requester._id.toString() === userId ? rel.recipient : rel.requester)
             return { Ec: 0, Mes: "Friend list fetched", Data: friends }

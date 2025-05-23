@@ -1,10 +1,9 @@
-const { default: mongoose } = require("mongoose");
-const connection = require("../config/configDB");
+const { default: mongoose } = require("mongoose")
+const connection = require("../config/configDB")
 
 const createPostService = async (dataCreate) => {
-    console.log(dataCreate)
     try {
-        const { author, caption, media, visibility } = dataCreate;
+        const { author, caption, media, visibility } = dataCreate
         if (!author || !media) {
             return ({
                 Ec: -1,
@@ -36,7 +35,7 @@ const createPostService = async (dataCreate) => {
         return {
             Ec: -2,
             Mes: 'Internal server error',
-        };
+        }
     }
 }
 //update
@@ -48,19 +47,19 @@ const updateSocialPostService = async (dataUpdate) => {
         //         Mes: 'Missing '
         //     })
         // }
-        const { _id, author, caption, media, visibility, } = dataUpdate;
+        const { _id, author, caption, media, visibility, } = dataUpdate
         if (!_id) {
             return ({
                 Ec: -1,
                 Mes: 'Missing Id'
             })
         }
-        const existingPost = await connection.Post.findById(_id);
+        const existingPost = await connection.Post.findById(_id)
         if (!existingPost) {
             return {
                 Ec: -1,
                 Mes: 'Post not found'
-            };
+            }
         }
         let dataUp = await connection.Post.findByIdAndUpdate(
             _id,
@@ -75,14 +74,14 @@ const updateSocialPostService = async (dataUpdate) => {
             Ec: 0,
             Mes: 'Update post success',
             Data: dataUp
-        };
+        }
 
     } catch (e) {
         console.log(e)
         return {
             Ec: -2,
             Mes: 'Internal server error',
-        };
+        }
     }
 }
 //dele
@@ -92,7 +91,7 @@ const deletePostService = async (idPost) => {
             return {
                 Ec: -1,
                 Mes: 'Invalid or missing post ID'
-            };
+            }
         }
         let post = await connection.Post.deleteOne({ _id: idPost })
         if (!post) {
@@ -110,7 +109,54 @@ const deletePostService = async (idPost) => {
         return {
             Ec: -2,
             Mes: 'Internal server error',
-        };
+        }
     }
 }
-module.exports = { createPostService, updateSocialPostService, deletePostService }
+//get post
+const getPostsService = async (userId) => {
+    try {
+        if (!userId) {
+            return {
+                Ec: -1,
+                Mes: 'Missing userId'
+            }
+        }
+        const friendRel = await connection.RelationShip.find({
+            $or: [
+                { requester: userId, status: 'accepted' },
+                { recipient: userId, status: 'accepted' }
+            ]
+        })
+
+        const friends = friendRel.map(rel =>
+            rel.requester.toString() === userId ? rel.recipient : rel.requester
+        )
+
+        const posts = await connection.Post.find({
+            $or: [
+                {
+                    author: { $in: friends },
+                    visibility: { $in: ['friends', 'public'] }
+                },
+                { visibility: 'public' }
+            ]
+        })
+            .populate('author', 'firstName lastName avatar roleId')
+            .sort({ createdAt: -1 })
+            .limit(30)
+
+        return {
+            Ec: 0,
+            Mes: 'Fetched posts',
+            Data: posts
+        }
+    } catch (e) {
+        console.log(e)
+        return {
+            Ec: -2,
+            Mes: 'Internal server error'
+        }
+    }
+}
+
+module.exports = { createPostService, updateSocialPostService, deletePostService, getPostsService }
