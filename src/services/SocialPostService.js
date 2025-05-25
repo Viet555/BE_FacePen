@@ -156,5 +156,43 @@ const getPostsService = async (userId) => {
         }
     }
 }
-
-module.exports = { createPostService, updateSocialPostService, deletePostService, getPostsService }
+const likePostService = async (postId, userId) => {
+    try {
+        if (!postId || !userId) {
+            return {
+                Ec: -1,
+                Mes: 'missing postId or UserId'
+            }
+        }
+        const post = await connection.Post.findById(postId)
+        if (!post) {
+            return {
+                Ec: -2,
+                Mes: 'Post not found'
+            }
+        }
+        hasLike = post.likes.includes(userId)
+        if (hasLike) {
+            post.likes = post.likes.filter(id => id.toString() !== userId.toString())
+            await post.save();
+            return ({
+                Ec: 0,
+                Mes: 'unLike Success'
+            })
+        } else {
+            post.likes.push(userId)
+            await post.save();
+            return ({
+                Ec: 0,
+                Mes: 'Like Success'
+            })
+        }
+    } catch (e) {
+        console.log(e)
+        return {
+            Ec: -2,
+            Mes: 'Internal server error'
+        }
+    }
+}
+module.exports = { createPostService, updateSocialPostService, deletePostService, getPostsService, likePostService }

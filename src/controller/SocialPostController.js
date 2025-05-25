@@ -1,4 +1,4 @@
-const { createPostService, updateSocialPostService, deletePostService, getPostsService } = require("../services/SocialPostService")
+const { createPostService, updateSocialPostService, deletePostService, getPostsService, likePostService } = require("../services/SocialPostService")
 
 const CreatePost = async (req, res) => {
     try {
@@ -52,4 +52,18 @@ const getPost = async (req, res) => {
         })
     }
 }
-module.exports = { CreatePost, UpdateSocialPost, DeletePost, getPost }
+const likePost = async (req, res) => {
+    try {
+        postId = req.query.postId
+        userId = req.query.userId
+        let data = await likePostService(postId, userId)
+        return res.status(200).json(data)
+    } catch (e) {
+        console.log(e)
+        return res.status(400).json({
+            Ec: 1,
+            Mes: 'err from server'
+        })
+    }
+}
+module.exports = { CreatePost, UpdateSocialPost, DeletePost, getPost, likePost }
