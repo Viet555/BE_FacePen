@@ -28,8 +28,6 @@ const createPostService = async (dataCreate) => {
                 Mes: 'author is not esxits'
             })
         }
-
-
     } catch (e) {
         console.log(e)
         return {

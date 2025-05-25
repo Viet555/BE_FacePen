@@ -4,6 +4,7 @@ const { authMiddleware, authorize } = require('../middleware/JWTAction')
 const { CreatePost, UpdateSocialPost, DeletePost, getPost } = require('../controller/SocialPostController')
 const { SendFriendRequest, AcceptFriendRequest, RejectFriendRequest, GetListFriend } = require('../controller/RelationshipController')
 const { CreateStory, deleteStory, getAllstoryAction, getAllstoryArchive } = require('../controller/StoryController')
+const { createComment, deleteComment, getComment } = require('../controller/CommentController')
 const Router = express.Router()
 
 Router.post('/api/CreateUser', CreateUSer)
@@ -21,9 +22,13 @@ Router.post('/api/friend-Request', SendFriendRequest)
 Router.post('/api/friend-accept', AcceptFriendRequest)
 Router.post('/api/friend-reject', RejectFriendRequest)
 Router.get('/api/friend-list', GetListFriend)
-//
+//Story
 Router.post('/api/Create-Story', CreateStory)
 Router.delete('/api/Delete-Story', deleteStory)
 Router.get('/api/get-Story-action', getAllstoryAction)
 Router.get('/api/get-Story-archive', getAllstoryArchive)
+//comment
+Router.post('/api/Create-comment', createComment)
+Router.get('/api/get-comment', getComment)
+Router.delete('/api/delete-comment', deleteComment)
 module.exports = Router
