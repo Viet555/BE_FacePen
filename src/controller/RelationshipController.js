@@ -1,4 +1,4 @@
-const { SendFriendRequestService, AcceptFriendRequestService, rejectFriendRequestService, getListFriend } = require("../services/RelationshipService")
+const { SendFriendRequestService, AcceptFriendRequestService, rejectFriendRequestService, getListFriend, friendSuggestionService } = require("../services/RelationshipService")
 
 const SendFriendRequest = async (req, res) => {
     try {
@@ -52,4 +52,17 @@ const GetListFriend = async (req, res) => {
         })
     }
 }
-module.exports = { SendFriendRequest, AcceptFriendRequest, RejectFriendRequest, GetListFriend }
+const friendSuggestion = async (req, res) => {
+    try {
+        const userId = req.query.id
+        const response = await friendSuggestionService(userId);
+        return res.status(200).json(response);
+    } catch (e) {
+        console.log(e)
+        return res.status(400).json({
+            Ec: 1,
+            Mes: 'err from server'
+        })
+    }
+}
+module.exports = { SendFriendRequest, AcceptFriendRequest, RejectFriendRequest, GetListFriend, friendSuggestion }

@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
     gender: { type: String, },
     roleId: { type: String, },
     avatar: { type: String, },
+    adderss: { type: String },
     phoneNumber: { type: String, },
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
