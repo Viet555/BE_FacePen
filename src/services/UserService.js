@@ -22,17 +22,17 @@ const CreateUSerService = async (dataCreate) => {
             })
         } else {
             let hashPasswordUser = await hashUserPassword(dataCreate.password)
-            if (!dataCreate.RoleId) {
-                dataCreate.RoleId = 'User'
-            }
+            // if (!dataCreate.RoleId) {
+            //     dataCreate.RoleId = 'User'
+            // }
             let data = await connection.User.create({
 
                 firstName: dataCreate.firstName,
                 lastName: dataCreate.lastName,
                 password: hashPasswordUser,
                 email: dataCreate.email,
-                roleId: dataCreate.roleId,
-                avatar: dataCreate.avatar,
+                roleId: dataCreate.roleId || 'User',
+                avatar: dataCreate.avatar || '',
                 gender: dataCreate.gender,
 
             })

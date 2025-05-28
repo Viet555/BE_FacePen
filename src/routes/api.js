@@ -6,6 +6,7 @@ const { SendFriendRequest, AcceptFriendRequest, RejectFriendRequest, GetListFrie
 const { CreateStory, deleteStory, getAllstoryAction, getAllstoryArchive } = require('../controller/StoryController')
 const { createComment, deleteComment, getComment } = require('../controller/CommentController')
 const { createNotification } = require('../controller/NofiticationController')
+const upload = require('../upload')
 const Router = express.Router()
 
 Router.post('/api/CreateUser', CreateUSer)
@@ -14,7 +15,8 @@ Router.put('/api/update-user', updateUser)
 Router.get('/api/get-table-user', getUserTable)
 Router.delete('/api/DeleteUser', authMiddleware, authorize(['Admin']), deleteUser)
 //SocialPost
-Router.post('/api/Create-Post', CreatePost)
+// Router.post('/api/Create-Post', CreatePost)
+Router.post('/api/Create-Post', upload.array('media', 10), CreatePost);
 Router.put('/api/Update-Post', UpdateSocialPost)
 Router.delete('/api/Delete-Post', DeletePost)
 Router.get('/api/get-Post', getPost)

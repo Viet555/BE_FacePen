@@ -5,7 +5,7 @@ const PostSchema = new mongoose.Schema({
     caption: { type: String, },
     media: [
         {
-            data: { type: String, required: true },
+            url: { type: String, required: true },
             type: { type: String, required: true }
         }
     ],

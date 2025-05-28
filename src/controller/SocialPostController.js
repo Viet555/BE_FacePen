@@ -1,17 +1,22 @@
 const { createPostService, updateSocialPostService, deletePostService, getPostsService, likePostService } = require("../services/SocialPostService")
-
+require('dotenv').config()
+const backendUrl = process.env.BACKEND_URL || 'http://localhost:8888';
 const CreatePost = async (req, res) => {
     try {
-        let data = await createPostService(req.body)
+        const { author, caption, visibility } = req.body
+        const media = req.files.map((file) => ({
+            url: `${backendUrl}/uploads/${file.filename}`,
+            type: file.mimetype,
+        }))
+
+        const data = await createPostService({ author, caption, visibility, media })
         return res.status(200).json(data)
     } catch (e) {
-        console.log(e)
+        console.log(e);
         return res.status(400).json({
             Ec: 1,
-            Mes: 'err from server'
+            Mes: 'err from server',
         })
-
-
     }
 }
 const UpdateSocialPost = async (req, res) => {

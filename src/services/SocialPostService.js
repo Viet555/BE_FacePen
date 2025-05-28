@@ -4,7 +4,7 @@ const connection = require("../config/configDB")
 const createPostService = async (dataCreate) => {
     try {
         const { author, caption, media, visibility } = dataCreate
-        if (!author || !media) {
+        if (!author || !media || !media.length === 0) {
             return ({
                 Ec: -1,
                 Mes: "missing input "
