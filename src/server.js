@@ -6,6 +6,9 @@ const port = process.env.PORT || 8888;
 const hostname = process.env.HOST_NAME || 'localhost';
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const http = require('http');
+const server = http.createServer(app);
+const { setupSocket, } = require('./socket');
 const path = require('path');
 app.use(cors({
     origin: 'http://localhost:3000',
@@ -29,6 +32,7 @@ app.use('/', Router)
 app.use((req, res) => {
     return res.send('404 not found')
 })
+setupSocket(server);
 app.listen(port, hostname, () => {
     console.log(`✅ Server running at http://${hostname}:${port}`);
 });

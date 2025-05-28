@@ -3,7 +3,12 @@ const mongoose = require('mongoose');
 const PostSchema = new mongoose.Schema({
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     caption: { type: String, },
-    media: [{ type: String, required: true },],
+    media: [
+        {
+            data: { type: String, required: true },
+            type: { type: String, required: true }
+        }
+    ],
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     comments: [{
         user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },

@@ -148,19 +148,22 @@ const friendSuggestionService = async (userId) => {
             _id: { $nin: Array.from(excludedIds) },
             adderss: User.adderss,
             // status: 'acctive'
-        }).limit(8)
+        }).limit(5)
         const friendOfFriendIds = await getFriendsOfFriends(userId)
         const friendOfFriendSuggestions = await connection.User.find({
             _id: {
                 $in: friendOfFriendIds.filter(id => !excludedIds.has(id.toString()))
             },
             status: 'active'
-        }).limit(8)
+        }).limit(5)
         return {
             Ec: 0,
             Mes: 'get suucess',
-            sameCitySuggestions,
-            friendOfFriendSuggestions
+            data: {
+                sameCitySuggestions,
+                friendOfFriendSuggestions
+            }
+
         };
     } catch (e) {
         console.log(e)
