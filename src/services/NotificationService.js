@@ -1,6 +1,4 @@
 const connection = require("../config/configDB")
-
-
 const createNotificationService = async (dataNotification) => {
     try {
         const { senderId, receiverId, type, postId, commentId } = dataNotification
