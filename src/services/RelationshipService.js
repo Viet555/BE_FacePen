@@ -1,5 +1,6 @@
 const { default: mongoose, set } = require("mongoose")
 const connection = require("../config/configDB")
+const { createNotificationService } = require("./NotificationService")
 
 const SendFriendRequestService = async (requesterId, recipientId) => {
     try {
@@ -17,6 +18,13 @@ const SendFriendRequestService = async (requesterId, recipientId) => {
             return { Ec: 1, Mes: "Friend request already sent or exists" }
         }
         await connection.RelationShip.create({ requester: requesterId, recipient: recipientId })
+        const notification = await createNotificationService({
+            senderId: requesterId,
+            receiverId: recipientId,
+            type: 'friend_request',
+            content: 'đã gửi lời mời kết bạn cho bạn'
+        })
+
         return {
             Ec: 0, Mes: "Friend request sent"
         }
@@ -51,6 +59,12 @@ const AcceptFriendRequestService = async (requesterId, recipientId) => {
         // await connection.User.findByIdAndUpdate(recipientId, {
         //     $addToSet: { friends: requesterId }
         // });
+        const notification = await createNotificationService({
+            senderId: recipientId,
+            receiverId: requesterId,
+            type: 'friend_accept',
+            content: 'đã chấp nhận lời mời kết bạn của bạn'
+        })
         return { Ec: 0, Mes: "Friend request accepted" }
 
     } catch (e) {

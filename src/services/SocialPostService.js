@@ -1,5 +1,6 @@
 const { default: mongoose } = require("mongoose")
 const connection = require("../config/configDB")
+const { createNotificationService } = require("./NotificationService")
 
 const createPostService = async (dataCreate) => {
     try {
@@ -173,15 +174,28 @@ const likePostService = async (postId, userId) => {
         }
         hasLike = post.likes.includes(userId)
         if (hasLike) {
-            post.likes = post.likes.filter(id => id.toString() !== userId.toString())
-            await post.save();
+            await connection.Post.updateOne(
+                { _id: postId },
+                { $pull: { likes: userId } }
+            );
             return ({
                 Ec: 0,
                 Mes: 'unLike Success'
             })
         } else {
-            post.likes.push(userId)
-            await post.save();
+            await connection.Post.updateOne(
+                { _id: postId },
+                { $push: { likes: userId } }
+            )
+            if (post.author.toString() !== userId.toString()) {
+                const notification = await createNotificationService({
+                    senderId: userId,
+                    receiverId: post.author.toString(),
+                    type: 'like',
+                    postId,
+                    content: 'đã thích bài viết của bạn'
+                })
+            }
             return ({
                 Ec: 0,
                 Mes: 'Like Success'

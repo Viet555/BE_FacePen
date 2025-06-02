@@ -1,4 +1,5 @@
 const connection = require("../config/configDB")
+const { createNotificationService } = require("./NotificationService")
 
 const createCommentService = async (data) => {
     try {
@@ -32,6 +33,15 @@ const createCommentService = async (data) => {
             parentComment: parentComment || null,
             likes: likes || [],
         })
+        if (checkPost.author.toString() !== author.toString()) {
+            const notification = await createNotificationService({
+                senderId: author,
+                receiverId: checkPost.author,
+                type: 'comment',
+                postId: post,
+                content: 'đã bình luận bài viết của bạn'
+            })
+        }
         return {
             Ec: 0,
             Mes: 'Comment created',

@@ -5,8 +5,9 @@ const { CreatePost, UpdateSocialPost, DeletePost, getPost, likePost } = require(
 const { SendFriendRequest, AcceptFriendRequest, RejectFriendRequest, GetListFriend, friendSuggestion } = require('../controller/RelationshipController')
 const { CreateStory, deleteStory, getAllstoryAction, getAllstoryArchive } = require('../controller/StoryController')
 const { createComment, deleteComment, getComment } = require('../controller/CommentController')
-const { createNotification } = require('../controller/NofiticationController')
-const upload = require('../upload')
+const { createNotification, getNotifications, markAsRead, deleteNotification } = require('../controller/NofiticationController')
+const upload = require('../middleware/upload')
+
 const Router = express.Router()
 
 Router.post('/api/CreateUser', CreateUSer)
@@ -39,4 +40,7 @@ Router.get('/api/get-comment', getComment)
 Router.delete('/api/delete-comment', deleteComment)
 //Notifi
 Router.post('/api/Create-notification', createNotification)
+Router.get('/api/get-notification-user', getNotifications)
+Router.post('/api/markAsRead-notification', markAsRead)
+Router.delete('/api/delete-notification', deleteNotification)
 module.exports = Router
