@@ -21,6 +21,7 @@ const CreatePost = async (req, res) => {
 }
 const UpdateSocialPost = async (req, res) => {
     try {
+
         let data = await updateSocialPostService(req.body)
         return res.status(200).json(data)
     } catch (e) {

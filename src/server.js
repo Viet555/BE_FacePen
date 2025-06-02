@@ -28,7 +28,7 @@ app.use(cookieParser())
 //khai bao route
 // app.use('/', webRoutes);
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 app.use('/', Router)
 // app.use('/', routerPass)
