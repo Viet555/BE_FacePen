@@ -7,6 +7,7 @@ const { CreateStory, deleteStory, getAllstoryAction, getAllstoryArchive } = requ
 const { createComment, deleteComment, getComment } = require('../controller/CommentController')
 const { createNotification, getNotifications, markAsRead, deleteNotification } = require('../controller/NofiticationController')
 const upload = require('../middleware/upload')
+const { sendMessage, getConversation } = require('../controller/MessageController')
 
 const Router = express.Router()
 
@@ -43,4 +44,7 @@ Router.post('/api/Create-notification', createNotification)
 Router.get('/api/get-notification-user', getNotifications)
 Router.post('/api/markAsRead-notification', markAsRead)
 Router.delete('/api/delete-notification', deleteNotification)
+//message
+Router.post('/api/send-message', sendMessage)
+Router.get('/api/get-conservation', getConversation)
 module.exports = Router

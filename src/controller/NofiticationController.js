@@ -6,7 +6,6 @@ const createNotification = async (req, res,) => {
     try {
 
         const notification = await createNotificationService(req.body);
-        console.log(req.body.receiverId)
         const receiverId = req.body.receiverId;
         if (receiverId) {
             getIO().to(receiverId).emit("new-notification", notification);

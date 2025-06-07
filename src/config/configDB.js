@@ -9,6 +9,7 @@ const StoryCollection = require('../model/StoryCollection');
 const StoryArchive = require('../model/StoryArchive');
 const Comment = require('../model/Comment');
 const Notification = require('../model/Nofitication');
+const Message = require('../model/Message');
 
 connection = mongoose.connect('mongodb://localhost:27017/FacePen', {
 
@@ -17,4 +18,4 @@ connection = mongoose.connect('mongodb://localhost:27017/FacePen', {
     .catch(err => console.error('Error connecting to MongoDB:', err));
 
 
-module.exports = { connection, User, Post, RelationShip, Story, StoryArchive, StoryCollection, Comment, Notification };
+module.exports = { connection, User, Post, RelationShip, Story, StoryArchive, StoryCollection, Comment, Notification, Message };
