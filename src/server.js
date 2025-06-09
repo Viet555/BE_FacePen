@@ -36,6 +36,6 @@ app.use((req, res) => {
     return res.send('404 not found')
 })
 setupSocket(server);
-app.listen(port, hostname, () => {
+server.listen(port, hostname, () => {
     console.log(`✅ Server running at http://${hostname}:${port}`);
 });

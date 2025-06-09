@@ -6,7 +6,6 @@ const salt = bcrypt.genSaltSync(10);
 
 //CreateUser
 const CreateUSerService = async (dataCreate) => {
-    console.log(dataCreate)
     try {
         if (!dataCreate.firstName || !dataCreate.lastName || !dataCreate.email || !dataCreate.password) {
             return ({
@@ -166,7 +165,7 @@ const handleUpdateUser = async (dataUpdate) => {
             let isMatch = await bcrypt.compare(dataUpdate.currentPassword, user.password)
             if (!isMatch) {
                 return ({
-                    EC: -1,
+                    Ec: -1,
                     MES: 'Mật khẩu hiện tại không chính xác'
                 })
             } else {
@@ -185,7 +184,7 @@ const handleUpdateUser = async (dataUpdate) => {
             })
         }
         return ({
-            EC: 0,
+            Ec: 0,
             MES: 'User updated successfully',
             data: User
         });

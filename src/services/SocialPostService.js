@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose")
 const connection = require("../config/configDB")
 const { createNotificationService } = require("./NotificationService")
+const { createNotification } = require("../controller/NofiticationController")
 
 const createPostService = async (dataCreate) => {
     try {

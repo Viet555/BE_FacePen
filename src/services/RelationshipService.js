@@ -1,6 +1,7 @@
 const { default: mongoose, set } = require("mongoose")
 const connection = require("../config/configDB")
 const { createNotificationService } = require("./NotificationService")
+const { createNotification } = require("../controller/NofiticationController")
 
 const SendFriendRequestService = async (requesterId, recipientId) => {
     try {
@@ -17,16 +18,18 @@ const SendFriendRequestService = async (requesterId, recipientId) => {
         if (Exsiting) {
             return { Ec: 1, Mes: "Friend request already sent or exists" }
         }
-        await connection.RelationShip.create({ requester: requesterId, recipient: recipientId })
+        let data = await connection.RelationShip.create({ requester: requesterId, recipient: recipientId })
         const notification = await createNotificationService({
             senderId: requesterId,
             receiverId: recipientId,
             type: 'friend_request',
             content: 'đã gửi lời mời kết bạn cho bạn'
         })
-
         return {
-            Ec: 0, Mes: "Friend request sent"
+            Ec: 0,
+            Mes: "Friend request sent",
+            data,
+
         }
     } catch (e) {
         console.log(e)
@@ -38,6 +41,8 @@ const SendFriendRequestService = async (requesterId, recipientId) => {
 }
 const AcceptFriendRequestService = async (requesterId, recipientId) => {
     try {
+
+        console.log('ádad', requesterId, recipientId)
         if (!requesterId || !recipientId) {
             return ({
                 Ec: -1,
@@ -152,17 +157,23 @@ const friendSuggestionService = async (userId) => {
             ]
         })
         const excludedIds = new Set([userId.toString()])
+        const pendingIds = new Set();
         relationShip.forEach(rel => {
             if (rel.status === 'accepted' || rel.status === 'pending') {
                 excludedIds.add(rel.requester.toString())
                 excludedIds.add(rel.recipient.toString())
             }
         })
-        const sameCitySuggestions = await connection.User.find({
+
+        let sameCitySuggestions = await connection.User.find({
             _id: { $nin: Array.from(excludedIds) },
             adderss: User.adderss,
-            // status: 'acctive'
-        }).limit(5)
+        }).limit(5);
+
+        // sameCitySuggestions = sameCitySuggestions.map(user => ({
+        //     ...user.toObject(),
+        //     status: pendingIds.has(user._id.toString()) ? 'pending' : 'not_sent',
+        // }));
         const friendOfFriendIds = await getFriendsOfFriends(userId)
         const friendOfFriendSuggestions = await connection.User.find({
             _id: {

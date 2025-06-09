@@ -1,8 +1,10 @@
 const connection = require("../config/configDB")
+const { getIO } = require("../socket")
 const createNotificationService = async (dataNotification) => {
     try {
+
         const { senderId, receiverId, type, postId, commentId } = dataNotification
-        if (!senderId || !receiverId || !type || !postId) {
+        if (!senderId || !receiverId || !type) {
             return (
                 {
                     Ec: -1,
@@ -17,6 +19,9 @@ const createNotificationService = async (dataNotification) => {
             postId,
             commentId
         })
+        if (senderId) {
+            getIO().to(senderId.toString()).emit("new-notification", notification);
+        }
         return {
             Ec: 0,
             Mes: 'Success',

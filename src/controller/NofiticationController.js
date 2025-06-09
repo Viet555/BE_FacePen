@@ -4,11 +4,11 @@ const { getIO } = require("../socket");
 
 const createNotification = async (req, res,) => {
     try {
-
-        const notification = await createNotificationService(req.body);
-        const receiverId = req.body.receiverId;
+        const notification = await createNotificationService();
+        const receiverId = data.receiverId;
+        console.log('receipt', receiverId)
         if (receiverId) {
-            getIO().to(receiverId).emit("new-notification", notification);
+            getIO().to(receiverId.toString()).emit("new-notification", notification);
         }
         return res.status(200).json(notification);
     } catch (e) {
