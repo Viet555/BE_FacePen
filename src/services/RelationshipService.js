@@ -23,7 +23,8 @@ const SendFriendRequestService = async (requesterId, recipientId) => {
             senderId: requesterId,
             receiverId: recipientId,
             type: 'friend_request',
-            content: 'đã gửi lời mời kết bạn cho bạn'
+            content: 'đã gửi lời mời kết bạn cho bạn',
+            relationShipId: data?._id.toString()
         })
         return {
             Ec: 0,
@@ -41,8 +42,6 @@ const SendFriendRequestService = async (requesterId, recipientId) => {
 }
 const AcceptFriendRequestService = async (requesterId, recipientId) => {
     try {
-
-        console.log('ádad', requesterId, recipientId)
         if (!requesterId || !recipientId) {
             return ({
                 Ec: -1,
@@ -70,7 +69,7 @@ const AcceptFriendRequestService = async (requesterId, recipientId) => {
             type: 'friend_accept',
             content: 'đã chấp nhận lời mời kết bạn của bạn'
         })
-        return { Ec: 0, Mes: "Friend request accepted" }
+        return { Ec: 0, Mes: "Friend request accepted", data }
 
     } catch (e) {
         console.log(e)

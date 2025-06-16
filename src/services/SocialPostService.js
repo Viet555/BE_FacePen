@@ -142,6 +142,7 @@ const getPostsService = async (userId) => {
             ]
         })
             .populate('author', 'firstName lastName avatar roleId')
+            .populate('likes', 'firstName lastName')
             .sort({ createdAt: -1 })
             .limit(30)
 

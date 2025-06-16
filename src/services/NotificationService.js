@@ -3,7 +3,7 @@ const { getIO } = require("../socket")
 const createNotificationService = async (dataNotification) => {
     try {
 
-        const { senderId, receiverId, type, postId, commentId } = dataNotification
+        const { senderId, receiverId, type, postId, commentId, relationShipId } = dataNotification
         if (!senderId || !receiverId || !type) {
             return (
                 {
@@ -17,10 +17,11 @@ const createNotificationService = async (dataNotification) => {
             receiverId,
             type,
             postId,
-            commentId
+            commentId,
+            relationShipId
         })
-        if (senderId) {
-            getIO().to(senderId.toString()).emit("new-notification", notification);
+        if (receiverId) {
+            getIO().to(receiverId.toString()).emit("new-notification", notification);
         }
         return {
             Ec: 0,
@@ -39,7 +40,7 @@ const getNotificationService = async (userId) => {
                 Mes: 'Missing user ID'
             }
         }
-        let notification = await connection.Notification.find({ receiverId: userId }).sort({ createdAt: -1 }).limit(20)
+        let notification = await connection.Notification.find({ receiverId: userId }).sort({ createdAt: -1 }).limit(20).populate('senderId').populate('relationShipId', 'status')
         if (!notification) {
             return ({
                 Ec: -2,
@@ -49,7 +50,7 @@ const getNotificationService = async (userId) => {
         return ({
             Ec: 0,
             Mes: 'get notification success',
-            notification
+            data: notification
         })
     } catch (e) {
         console.log(e)

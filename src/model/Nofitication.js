@@ -11,7 +11,9 @@ const notificationSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
         expires: 864000,
-    }
+    },
+    relationShipId: { type: mongoose.Schema.Types.ObjectId, ref: 'Relationship', default: null },
+
 }, {
     timestamps: true
 });
